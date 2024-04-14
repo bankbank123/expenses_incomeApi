@@ -37,7 +37,7 @@ class UserRegister(APIView):
             serializer.validated_data['token'] = token
             
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data['token'], status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -67,17 +67,13 @@ class UserLogin(APIView):
 
             # Return the user data along with the token
             response_data = {
-                'username': user.username,
-                'email': user.email,
-                'firstname': user.firstname,
-                'lastname': user.lastname,
                 'token': token
             }
             
             return Response(response_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class UserToken(APIView):
+class getUserToken(APIView):
     def post(self, request, format=None):
         serializer = UserTokenSerializer(data=request.data)
         if serializer.is_valid():
@@ -92,10 +88,10 @@ class UserToken(APIView):
 
             # Return the user data if the token is valid
             response_data = {
-                'username': user.username,
-                'email': user.email,
-                'firstname': user.firstname,
-                'lastname': user.lastname,
+                'username' : user.username,
+                'firstname' : user.firstname,
+                'lastname' : user.lastname,
+                'email' : user.email,
                 'token': token
             }
             return Response(response_data, status=status.HTTP_200_OK)
